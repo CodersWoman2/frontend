@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ödev Takip ve Hatırlatma Asistanı</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(to right, #08df3d, #0a18e1);
+            font-family: Arial, sans-serif;
+            position: relative;
+        }
+        .welcome-message {
+            position: absolute;
+            top: 60px; /* Mesajı biraz aşağı kaydırdım */
+            width: 100%;
+            text-align: center;
+            font-size: 28px;
+            color: white;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column; /* Dikey hizalama */
+            align-items: center;
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(224, 210, 210, 0.1);
+            width: 300px;
+        }
+        h2 {
+            margin-top: 5px;
+            color: #021913;
+        }
+          label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+     
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            margin-bottom: 10x;
+            border: 2px solid #818481;
+            border-radius: 4px;
+        }
+        button {
+            margin-top: 8px;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .welcome-message {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; /* İstediğin yazı tipini buraya yaz */
+    font-size: 32px; /* Yazı boyutu */
+    font-weight: bold; /* Yazı kalınlığı */
+    text-transform: uppercase; /* Tüm harfleri büyük yapar (isteğe bağlı) */
+}
+        .message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .login-link a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="welcome-message">Ödev Takip ve Hatırlatma Asistanı</div>
+
+<div class="container" id="formContainer">
+    <h2>Hoş Geldiniz!</h2>
+    <label for="username">Kullanıcı Adı</label>
+    <input type="text" id="username" required>
+    
+    <label for="email">E-posta</label>
+    <input type="email" id="email" required>
+    
+    <label for="password">Şifre</label>
+    <input type="password" id="password" required>
+    
+    <button onclick="register()">Kayıt Ol</button>
+    <div class="message" id="message"></div>
+    <div class="login-link" id="loginLink">
+        Zaten kayıtlı mısınız? <a href="javascript:setLoginForm()">Giriş yapın</a>
+    </div>
+</div>
+
+<script>
+    function register() {
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        if (localStorage.getItem(email)) {
+            document.getElementById('message').innerText = "Bu e-posta ile zaten bir hesap mevcut.";
+        } else {
+            localStorage.setItem(email, JSON.stringify({ username: username, password: password }));
+            document.getElementById('message').innerText = "Kayıt başarılı! Şimdi giriş yapabilirsiniz.";
+            setLoginForm();
+        }
+    }
+
+    function setLoginForm() {
+        const container = document.getElementById('formContainer');
+        container.innerHTML = `
+            <h2>Giriş Yap</h2>
+            <label for="email">E-posta</label>
+            <input type="email" id="email" required>
+            
+            <label for="password">Şifre</label>
+            <input type="password" id="password" required>
+            
+            <button onclick="login()">Giriş Yap</button>
+            <div class="message" id="message"></div>
+            <div class="login-link">
+                Hesabınız yok mu? <a href="javascript:setRegisterForm()">Kayıt olun</a>
+            </div>
+        `;
+    }
+
+    function setRegisterForm() {
+        document.getElementById('formContainer').innerHTML = `
+            <h2>Kayıt Ol</h2>
+            <label for="username">Kullanıcı Adı</label>
+            <input type="text" id="username" required>
+            
+            <label for="email">E-posta</label>
+            <input type="email" id="email" required>
+            
+            <label for="password">Şifre</label>
+            <input type="password" id="password" required>
+            
+            <button onclick="register()">Kayıt Ol</button>
+            <div class="message" id="message"></div>
+            <div class="login-link">
+                Zaten kayıtlı mısınız? <a href="javascript:setLoginForm()">Giriş yapın</a>
+            </div>
+        `;
+    }
+
+    function login() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const user = JSON.parse(localStorage.getItem(email));
+        
+        if (user && user.password === password) {
+            document.getElementById('message').innerText = "Giriş başarılı! Hoş geldiniz, " + user.username;
+        } else {
+            document.getElementById('message').innerText = "E-posta veya şifre yanlış.";
+        }
+    }
+</script>
+
+</body>
+</html>
